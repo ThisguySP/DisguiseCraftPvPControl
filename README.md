@@ -1,7 +1,7 @@
 DisguiseCraftPvPControl
 =======================
 
-This simple Bukkit plugin breaks the DisguiseCraft disguise of a player who enters combat as either the attacker or attacked with any player or mob (thus slightly invalidating its name as a PvP-related plugin).
+This simple Bukkit plugin breaks the DisguiseCraft disguise of a player who enters combat as either the attacker or attacked with any player or mob (thus slightly invalidating its name as a PvP-related plugin). Note that you will not find it on BukkitDev, as the much more feature-rich MobDisguisePvPControl is still maintained.
 
 Configuration
 -------------
