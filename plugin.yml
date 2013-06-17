@@ -1,0 +1,4 @@
+name: DisguiseCraftPvPControl
+main: org.minecraftsmp.dcpvpc.DisguiseCraftPvPControl
+version: 0.1
+depend: [DisguiseCraft]
