@@ -1,3 +1,5 @@
 undisguise:
-  in: true
-  out: true
+  pvpin: true
+  pvpout: true
+  onfly: true
+  droponfly: false

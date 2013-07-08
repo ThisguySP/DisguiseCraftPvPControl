@@ -10,15 +10,20 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.EventHandler;
 
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerToggleFlightEvent;
 
 import org.bukkit.entity.Player;
 
 import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
 import pgDev.bukkit.DisguiseCraft.api.DisguiseCraftAPI;
 
+import pgDev.bukkit.DisguiseCraft.api.PlayerDisguiseEvent;
+
 public class DisguiseCraftPvPControl extends JavaPlugin implements Listener {
 	private boolean out;
 	private boolean in;
+	private boolean popOnFly;
+	private boolean dropOnFly;
 	DisguiseCraftAPI dcAPI;
 	
 	public void onEnable() {
@@ -28,8 +33,10 @@ public class DisguiseCraftPvPControl extends JavaPlugin implements Listener {
 			this.saveDefaultConfig();
 			getLogger().info("Generated fresh configuration file.");
 		}
-		in = this.getConfig().getBoolean("undisguise.in");
-		out = this.getConfig().getBoolean("undisguise.out");
+		in = this.getConfig().getBoolean("undisguise.pvpin");
+		out = this.getConfig().getBoolean("undisguise.pvpout");
+		popOnFly = this.getConfig().getBoolean("undisguise.onfly");
+		dropOnFly = this.getConfig().getBoolean("undisguise.droponfly");
 		dcAPI = DisguiseCraft.getAPI();
 	}
 	
@@ -60,6 +67,33 @@ public class DisguiseCraftPvPControl extends JavaPlugin implements Listener {
 			((Player)event.getEntity()).sendRawMessage("§cYour disguise was broken!");
 		} else {
 			return;
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerDisguise(PlayerDisguiseEvent event) {
+		if (!(event.getPlayer() instanceof Player)) {
+			return;
+		}
+		if (((Player)event.getPlayer()).getAllowFlight()) {
+			if (dropOnFly) {
+				((Player)event.getPlayer()).setAllowFlight(false);
+				((Player)event.getPlayer()).sendRawMessage("§cYou're now too heavy to fly!");
+			} else if (popOnFly) {
+				event.setCancelled(true);
+				((Player)event.getPlayer()).sendRawMessage("§cYou cannot do that now.");
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerToggleFlight(PlayerToggleFlightEvent event) {
+		if (!(event.getPlayer() instanceof Player)) {
+			return;
+		}
+		if (popOnFly && dcAPI.isDisguised((Player)event.getPlayer())) {
+			dcAPI.undisguisePlayer((Player)event.getPlayer());
+			((Player)event.getPlayer()).sendRawMessage("§cYour disguise was broken!");
 		}
 	}
 }
